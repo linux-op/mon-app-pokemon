@@ -3,7 +3,7 @@ name: Scraping Quotidien
 on:
   schedule:
     - cron: '0 3 * * *' # S'exécute à 3h00 tous les jours
-  workflow_dispatch:    # Ajoute un bouton pour le lancer manuellement
+  workflow_dispatch:    # Permet de le lancer manuellement via un bouton
 
 jobs:
   update-data:
@@ -12,13 +12,20 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      - run: python update_prix.py
-      - run: pip install requests
-      - run: |
+          
+      - name: Installer les dépendances
+        run: pip install requests
+          
+      - name: Lancer le script Python
+        run: python update_prix.py
+      
+      - name: Sauvegarder les résultats sur GitHub
+        run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add historique_prix.csv
