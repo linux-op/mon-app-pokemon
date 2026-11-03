@@ -29,7 +29,10 @@ jobs:
           fi
 
       - name: Lancer le script Python
-        run: python update_prix.py --out data
+        run: |
+          [ -f data/prices.sqlite.gz ] && gunzip -f data/prices.sqlite.gz || true
+          python update_prix.py --out data
+          gzip -9 -f data/prices.sqlite
 
       - name: Sauvegarder les résultats sur GitHub
         run: |
